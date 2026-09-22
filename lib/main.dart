@@ -1,122 +1,200 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CatalogoVeiculosApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Veiculo {
+  final String marca;
+  final String modelo;
+  final int ano;
+  double preco;
 
-  // This widget is the root of your application.
+  Veiculo({
+    required this.marca,
+    required this.modelo,
+    required this.ano,
+    required this.preco,
+  });
+
+  String descricao() {
+    return '$marca $modelo, ano $ano, por R\$ $preco';
+  }
+}
+
+final List<Veiculo> veiculos = [
+  Veiculo(
+    marca: 'Toyota',
+    modelo: 'Corolla',
+    ano: 2024,
+    preco: 150000,
+  ),
+  Veiculo(
+    marca: 'Honda',
+    modelo: 'Civic',
+    ano: 2023,
+    preco: 145000,
+  ),
+  Veiculo(
+    marca: 'Volkswagen',
+    modelo: 'T-Cross',
+    ano: 2025,
+    preco: 135000,
+  ),
+  Veiculo(
+    marca: 'Chevrolet',
+    modelo: 'Onix',
+    ano: 2022,
+    preco: 85000,
+  ),
+  Veiculo(
+    marca: 'Ford',
+    modelo: 'Ranger',
+    ano: 2024,
+    preco: 220000,
+  ),
+  Veiculo(
+    marca: 'Hyundai',
+    modelo: 'HB20',
+    ano: 2023,
+    preco: 90000,
+  ),
+  Veiculo(
+    marca: 'Fiat',
+    modelo: 'Pulse',
+    ano: 2025,
+    preco: 110000,
+  ),
+  Veiculo(
+    marca: 'BMW',
+    modelo: '320i',
+    ano: 2022,
+    preco: 250000,
+  ),
+];
+
+class CatalogoVeiculosApp extends StatelessWidget {
+  const CatalogoVeiculosApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Catálogo de Veículos',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: .fromSeed(seedColor: Colors.blue),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const CatalogoVeiculosPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class CatalogoVeiculosPage extends StatefulWidget {
+  const CatalogoVeiculosPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<CatalogoVeiculosPage> createState() =>
+      _CatalogoVeiculosPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _CatalogoVeiculosPageState extends State<CatalogoVeiculosPage> {
+  String textoPesquisa = '';
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final veiculosFiltrados = veiculos.where((veiculo) {
+      final pesquisa = textoPesquisa.toLowerCase();
+
+      return veiculo.marca.toLowerCase().contains(pesquisa) ||
+          veiculo.modelo.toLowerCase().contains(pesquisa);
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Catálogo de Veículos'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              onChanged: (texto) {
+                setState(() {
+                  textoPesquisa = texto;
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: 'Pesquisar veículo',
+                hintText: 'Digite marca ou modelo',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          ),
+          Expanded(
+            child: veiculosFiltrados.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Nenhum veículo encontrado.',
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: veiculosFiltrados.length,
+                    itemBuilder: (context, index) {
+                      final veiculo = veiculosFiltrados[index];
+
+                      return ListTile(
+                        title: Text(
+                          '${veiculo.marca} ${veiculo.modelo}',
+                        ),
+                        subtitle: Text(
+                          'Ano: ${veiculo.ano}\n'
+                          'Preço: R\$ ${veiculo.preco.toStringAsFixed(2)}',
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
 }
+// 1. Qual é a classe criada para representar um veículo?
+// Veiculo.
+
+// 2. Cite um objeto criado a partir dessa classe.
+// Toyota Corolla.
+
+// 3. Quais são os atributos da classe?
+// marca, modelo, ano e preco.
+
+// 4. Qual método foi criado e o que ele faz?
+// O método descricao() foi criado para retornar uma descrição textual
+// do veículo utilizando seus próprios atributos.
+
+// 5. Por que a tela de pesquisa precisa de estado?
+// Porque o texto pesquisado muda durante a execução e essa mudança
+// influencia quais veículos serão exibidos na lista.
+
+// 6. Qual variável armazena o texto pesquisado?
+// textoPesquisa armazena o texto digitado pelo usuário.
+
+// 7. Qual lista contém o resultado filtrado?
+// A lista veiculosFiltrados contém somente os veículos que correspondem
+// ao texto pesquisado.
+
+// 8. Em qual momento setState() é utilizado?
+// O setState() é utilizado dentro do onChanged do TextField,
+// sempre que o usuário altera o texto da pesquisa.
+
+// 9. Qual é a função do index na construção dos itens?
+// O index identifica a posição do veículo dentro da lista filtrada,
+// permitindo acessar o veículo correspondente através de
+// veiculosFiltrados[index].
+
+// 10. Onde final foi utilizado e por quê?
+// final foi utilizado nos atributos marca, modelo e ano da classe Veiculo,
+// pois seus valores não precisam ser alterados depois da criação do objeto.
+// Também foi utilizado em variáveis que não precisam ser reatribuídas,
+// como veiculosFiltrados e veiculo.
